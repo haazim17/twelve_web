@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Bebas Neue", sans-serif;
+  --font-serif: "Cormorant Garamond", serif;
+  --font-body: "Inter", "Outfit", sans-serif;
+
+  --color-bg: #0a0a0a;
+  --color-surface: #111111;
+  --color-panel: #161616;
+  --color-border: #1f1f1f;
+  --color-border-2: #2a2a2a;
+  --color-ink: #f0ede6;
+  --color-muted: #5a5a52;
+  --color-soft: #8a8a80;
+  --color-gold: #2a8f8f;
+  --color-gold-lt: #3ab5b5;
+  --color-gold-dim: #1a5f5f;
+}
+
+@layer base {
+  body {
+    @apply bg-bg text-ink font-body text-[14px] leading-relaxed overflow-x-hidden;
+  }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+.animate-spin-slow-reverse {
+  animation: spin-slow 20s linear infinite reverse;
+}
