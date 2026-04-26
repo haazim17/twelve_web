@@ -14,7 +14,6 @@ import {
   Mail, 
   Phone, 
   MapPin, 
-  ArrowRight,
   Cable,
   Plug,
   Menu,
@@ -40,6 +39,29 @@ const PRODUCTS: Product[] = [
   { id: 5, name: 'DUALC', category: 'C to C Cables', icon: <Cable className="w-16 h-16" />, description: 'Premium USB-C to USB-C cable for high-speed charging and data transfer.', badge: 'Best Seller' },
   { id: 6, name: 'FLEX CABLE', category: 'C to C Cables', icon: <Cable className="w-16 h-16" />, description: 'Flexible braided USB-C cable engineered for everyday durability.' },
 ];
+
+// --- Inline SVG Logo — no image file required ---
+const TwelveLogo = ({ className = '' }: { className?: string }) => (
+  <svg
+    viewBox="0 0 180 38"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    aria-label="TWELVE"
+  >
+    <text
+      x="0"
+      y="30"
+      fontFamily="'Bebas Neue', sans-serif"
+      fontSize="36"
+      letterSpacing="8"
+      fill="currentColor"
+    >
+      TWELVE
+    </text>
+    <rect x="0" y="35" width="44" height="1.5" fill="#2a8f8f" rx="1" />
+  </svg>
+);
 
 // --- Components ---
 
@@ -91,51 +113,100 @@ const CustomCursor = () => {
   );
 };
 
+const NAV_ITEMS = ['home', 'products', 'vision', 'about', 'contact'] as const;
+
 const Navbar = ({ activeSection, onNavClick }: { activeSection: string, onNavClick: (id: string) => void }) => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleNavClick = (id: string) => {
+    setMobileOpen(false);
+    onNavClick(id);
+  };
+
+  // Lock body scroll when drawer is open
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-surface bg-surface/95 backdrop-blur-xl">
-      <div className="mx-auto flex h-20 max-w-[1320px] items-center justify-between px-6 lg:px-14">
-        <button
-          type="button"
-          onClick={() => onNavClick('home')}
-          className="flex items-center text-ink transition hover:text-gold"
-        >
-          <img
-            src="/assets/logo-wordmark.png"
-            alt="TWELVE"
-            style={{ height: '40px' }}
-            className="w-auto object-contain"
-            referrerPolicy="no-referrer"
+    <>
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-surface bg-surface/95 backdrop-blur-xl">
+        <div className="mx-auto flex h-20 max-w-[1320px] items-center justify-between px-6 lg:px-14">
+          <button
+            type="button"
+            onClick={() => handleNavClick('home')}
+            className="flex items-center text-ink transition hover:text-gold"
+          >
+            <TwelveLogo className="h-9 w-auto" />
+          </button>
+
+          <ul className="hidden md:flex items-center gap-10 list-none">
+            {NAV_ITEMS.map((item) => (
+              <li key={item}>
+                <button
+                  onClick={() => handleNavClick(item)}
+                  className={`font-body text-[12px] font-medium tracking-[0.22em] uppercase transition-colors relative cursor-none group ${
+                    activeSection === item ? 'text-ink' : 'text-soft hover:text-ink'
+                  }`}
+                >
+                  {item}
+                  <span className={`absolute left-0 -bottom-1 h-px bg-gold transition-all duration-300 ${
+                    activeSection === item ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`} />
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          <button
+            type="button"
+            className="md:hidden flex items-center justify-center rounded-xl border border-border bg-bg/70 p-3 text-ink transition hover:border-gold hover:text-gold"
+            onClick={() => setMobileOpen((prev) => !prev)}
+            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+          >
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile drawer overlay */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-40 flex md:hidden">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setMobileOpen(false)}
           />
-        </button>
 
-        <ul className="hidden md:flex items-center gap-10 list-none">
-          {['home', 'products', 'vision', 'about', 'contact'].map((item) => (
-            <li key={item}>
-              <button
-                onClick={() => onNavClick(item)}
-                className={`font-body text-[12px] font-medium tracking-[0.22em] uppercase transition-colors relative cursor-none group ${
-                  activeSection === item ? 'text-ink' : 'text-soft hover:text-ink'
-                }`}
-              >
-                {item}
-                <span className={`absolute left-0 -bottom-1 h-px bg-gold transition-all duration-300 ${
-                  activeSection === item ? 'w-full' : 'w-0 group-hover:w-full'
-                }`} />
-              </button>
-            </li>
-          ))}
-        </ul>
+          {/* Slide-in panel */}
+          <div className="relative ml-auto h-full w-72 bg-surface border-l border-border flex flex-col pt-24 pb-10 px-8 shadow-2xl">
+            <div className="text-[9px] uppercase tracking-[0.3em] text-gold mb-8">Navigation</div>
 
-        <button
-          type="button"
-          className="md:hidden flex items-center justify-center rounded-xl border border-border bg-bg/70 p-3 text-ink transition hover:border-gold hover:text-gold"
-          onClick={() => onNavClick('menu')}
-        >
-          <Menu className="w-5 h-5" />
-        </button>
-      </div>
-    </nav>
+            <ul className="space-y-1 list-none flex-1">
+              {NAV_ITEMS.map((item) => (
+                <li key={item}>
+                  <button
+                    onClick={() => handleNavClick(item)}
+                    className={`w-full text-left font-display text-3xl tracking-wider transition-colors py-2 border-b border-border/40 ${
+                      activeSection === item ? 'text-gold' : 'text-ink hover:text-gold'
+                    }`}
+                  >
+                    {item.toUpperCase()}
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-10 border-t border-border pt-6 space-y-2 text-xs text-muted">
+              <div>twelve1212@gmail.com</div>
+              <div>+971 52 810 3123</div>
+              <div className="text-gold mt-1">@twelve_global</div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
@@ -417,13 +488,7 @@ const Footer = ({ onNavClick }: { onNavClick: (id: string) => void }) => {
         <div className="grid gap-12 lg:grid-cols-[1.5fr_1fr_1fr]">
           <div className="space-y-8">
             <div className="flex items-center gap-4">
-              <img
-                src="/assets/logo-wordmark.png"
-                alt="TWELVE"
-                style={{ height: '44px' }}
-                className="w-auto object-contain"
-                referrerPolicy="no-referrer"
-              />
+              <TwelveLogo className="h-10 w-auto text-ink" />
             </div>
             <p className="max-w-[500px] text-sm text-soft leading-7 font-light">
               Twelve delivers premium accessories with a refined look, thoughtful function and trusted materials. Built in Dubai, designed for global routines.
@@ -451,7 +516,7 @@ const Footer = ({ onNavClick }: { onNavClick: (id: string) => void }) => {
             <div>
               <div className="text-[9px] uppercase tracking-[0.22em] text-gold mb-5">Explore</div>
               <ul className="space-y-4">
-                {['home', 'products', 'vision', 'about', 'contact'].map((item) => (
+                {NAV_ITEMS.map((item) => (
                   <li key={item}>
                     <button
                       onClick={() => onNavClick(item)}
