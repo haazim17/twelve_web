@@ -19,6 +19,8 @@ import {
   Menu,
   X
 } from 'lucide-react';
+import logoMark from '../assets/logo-mark.png';
+import logoWordmark from '../assets/logo-wordmark.png';
 
 // --- Types ---
 interface Product {
@@ -41,28 +43,6 @@ const PRODUCTS: Product[] = [
 ];
 
 // --- Inline SVG Logo — no image file required ---
-const TwelveLogo = ({ className = '' }: { className?: string }) => (
-  <svg
-    viewBox="0 0 180 38"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className={className}
-    aria-label="TWELVE"
-  >
-    <text
-      x="0"
-      y="30"
-      fontFamily="'Bebas Neue', sans-serif"
-      fontSize="36"
-      letterSpacing="8"
-      fill="currentColor"
-    >
-      TWELVE
-    </text>
-    <rect x="0" y="35" width="44" height="1.5" fill="#2a8f8f" rx="1" />
-  </svg>
-);
-
 // --- Components ---
 
 const CustomCursor = () => {
@@ -137,8 +117,13 @@ const Navbar = ({ activeSection, onNavClick }: { activeSection: string, onNavCli
             type="button"
             onClick={() => handleNavClick('home')}
             className="flex items-center text-ink transition hover:text-gold"
+            aria-label="Go to home"
           >
-            <TwelveLogo className="h-9 w-auto" />
+            <img
+              src={logoMark}
+              alt="Twelve"
+              className="h-11 w-auto object-contain"
+            />
           </button>
 
           <ul className="hidden md:flex items-center gap-10 list-none">
@@ -221,8 +206,12 @@ const Hero = ({ onCtaClick }: { onCtaClick: (id: string) => void }) => {
             <span className="w-12 h-px bg-gold" /> Dubai · Est. 2024
           </div>
 
-          <h1 className="font-display text-5xl lg:text-[5.25rem] tracking-tight leading-[0.95] text-ink">
-            Premium accessories designed for performance, precision and everyday life.
+          <h1 className="max-w-[760px]">
+            <img
+              src={logoWordmark}
+              alt="Twelve Highly Professional"
+              className="h-auto w-full max-w-[680px] object-contain"
+            />
           </h1>
 
           <p className="text-[15px] text-soft leading-8 font-light max-w-[680px]">
@@ -488,7 +477,11 @@ const Footer = ({ onNavClick }: { onNavClick: (id: string) => void }) => {
         <div className="grid gap-12 lg:grid-cols-[1.5fr_1fr_1fr]">
           <div className="space-y-8">
             <div className="flex items-center gap-4">
-              <TwelveLogo className="h-10 w-auto text-ink" />
+              <img
+                src={logoWordmark}
+                alt="Twelve Highly Professional"
+                className="h-10 w-auto object-contain"
+              />
             </div>
             <p className="max-w-[500px] text-sm text-soft leading-7 font-light">
               Twelve delivers premium accessories with a refined look, thoughtful function and trusted materials. Built in Dubai, designed for global routines.
